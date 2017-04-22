@@ -1,1 +1,0 @@
-(define-package "flatui-dark-theme" "20170420.1213" "Dark color theme with colors from https://flatuicolors.com/" '((emacs "24")) :url "https://github.com/theasp/flatui-dark-theme" :keywords '("color" "theme" "dark" "flatui" "faces"))

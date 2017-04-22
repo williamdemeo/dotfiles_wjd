@@ -4,12 +4,16 @@
 ; modified [2013.07.23] by <williamdemeo@gmail.com>
 ; modified [2011.01.01] by <williamdemeo@gmail.com>
 
-;; (setq load-path (cons "~/.elisp" load-path))
-(setq load-path (cons "~/.elisp" load-path))
+;(setq load-path (cons "~/.elisp" load-path))
 (scroll-bar-mode -1)
 
 ;; Proof General IDE for Coq
-;(load-file "~/opt/ProofGeneral/generic/proof-site.el")
+(load-file "/usr/share/emacs/site-lisp/proofgeneral/generic/proof-site.el")
+;;(load-file "~/opt/ProofGeneral/generic/proof-site.el")
+
+;; Agda mode
+;; (load-file (let ((coding-system-for-read 'utf-8))
+;;                 (shell-command-to-string "agda-mode locate")))
 
 ;; If emacs is started in a new window, that window 
 ;; should be sized appropriately for your screen.
@@ -24,27 +28,62 @@
   (arrange-frame 187 48 70 0)  ; <<<< set the w h x y variables here
 )
 
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+      ("marmalade" . "http://marmalade-repo.org/packages/")
+      ("melpa" . "http://melpa.milkbox.net/packages/")
+      ("melpa-stable" . "http://stable.melpa.org/packages/")
+      ))
+
+;; (require 'package)
+;; (add-to-list 'package-archives
+;;   '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+;; (package-initialize)
+
+;; (require 'package)
+;; (add-to-list 'package-archives
+;;              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;; (package-initialize)
+
+
 ;;
 ;; For Magit
 ;;
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-      ("marmalade" . "http://marmalade-repo.org/packages/")
-      ("melpa" . "http://melpa.milkbox.net/packages/")))
 ;; If you want to use magit, install the magit package
 ;; (if you haven't done so already) with the following commands:
 ;; \M package-refresh-contents
 ;; \M package-install [Enter] magit
 (define-key global-map "\M-gm" 'magit-status)
 
+
+;;
+;; For Haskell
+;;
+(require 'package)
+(package-initialize)
+(package-refresh-contents)
+
+;; Install Intero
+;; Intero comes with ghc-mod, flycheck, company
+(package-install 'intero)
+(add-hook 'haskell-mode-hook 'intero-mode)
+
+;; Tidal cycles
+(add-to-list 'load-path "~/git/TEAMS/TypeFunc/gh/uh-mfc/haskelltalk/") ;; Look for tidal.el in ~/uh-mfc/haskelltalk/
+(require 'tidal)
+(setq tidal-interpreter "~/git/TEAMS/TypeFunc/gh/uh-mfc/haskelltalk/ghciscript")
+
+(setenv "LD_LIBRARY_PATH"
+  (let ((current (getenv "LD_LIBRARY_PATH"))
+        (new "/usr/local/lib"))
+    (if current (concat new ":" current) new)))
+
+
+
 ;;
 ;; For Scala
 ;;
-;; (require 'package)
-;; (add-to-list 'package-archives
-;;              '("melpa" . "http://melpa.milkbox.net/packages/") t)
-;; (package-initialize)
-;; (unless (package-installed-p 'scala-mode2)
-;;   (package-refresh-contents) (package-install 'scala-mode2))
+(unless (package-installed-p 'scala-mode2)
+  (package-refresh-contents) (package-install 'scala-mode2))
 
 
 ;;; uncomment this line to disable loading of "default.el" at startup
@@ -81,7 +120,7 @@
  (add-hook 'matlab-mode-hook
  	  (lambda () 
  ;	    (abbrev-mode 1)
- 	    (auto-fill-mode 1)
+; 	    (auto-fill-mode 1)
  	    (font-lock-mode 1)))
  ;; see: file:///usr/share/doc/octave2.1-htmldoc/octave_39.html#SEC230
 
@@ -103,7 +142,7 @@
       (cons '("\\.def$" . LaTeX-mode) auto-mode-alist))
 (add-hook 'LaTeX-mode-hook 
           (lambda () 
-	    (auto-fill-mode 1)
+;	    (auto-fill-mode 1)
 	    (font-lock-mode 1)))
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
 
@@ -116,12 +155,12 @@
 
  (add-hook 'latex-mode-hook
  	  (lambda () 
- 	    (auto-fill-mode t)
+; 	    (auto-fill-mode t)
 	    (reftex-mode t)))
 
 
 ;; >>>> Set the default location for your main .bib database here <<<<
-;;(setq reftex-default-bibliography '("~/Dropbox/RESEARCH/wjd.bib"))
+(setq reftex-default-bibliography '("~/Dropbox/RESEARCH/wjd.bib"))
 
 ;;
 ;;  BibTex Mode
@@ -136,7 +175,9 @@
 (setq auto-mode-alist (append (list '("\\.md$" . markdown-mode)
                                     '("\\.markdown$" . markdown-mode))
                               auto-mode-alist))
-(add-hook 'markdown-mode-hook (lambda () (auto-fill-mode 1)))
+(add-hook 'markdown-mode-hook (lambda ()
+;				(auto-fill-mode 1)
+				))
 
 ;;
 ;; NOTES
@@ -187,9 +228,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-;; '(agda2-include-dirs (quote ("." "/home/williamdemeo/git/PROGRAMMING/AGDA/ial/1.2")))
+; '(agda2-include-dirs (quote ("." "/home/williamdemeo/git/Agda/agda-prelude/src" "/usr/share/agda-stdlib")))
  '(ansi-color-names-vector ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
- '(auto-fill-mode t)
+; '(auto-fill-mode t)
  '(case-replace nil)
  '(column-number-mode t)
 ; '(custom-enabled-themes (quote (deeper-blue)))
@@ -233,39 +274,30 @@
 ;; (require 'smtpmail)
 ;;;; ----end gmail section
 
-; Load theme
-(add-to-list 'load-path "~/.emacs.d/themes/color-theme-6.6.0")
 (require 'color-theme)
-(eval-after-load "color-theme"
-  '(progn
-     (color-theme-initialize)
-     (color-theme-hober)))
-;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-;; (add-to-list 'color-theme-load-path "~/.emacs.d/themes")
-(add-to-list 'load-path "~/emacs.d.wjd/themes/flatui-dark-theme-20170420.1213")
-(setq my-color-themes (list 'color-theme-billw 'color-theme-jsc-dark 
+  (setq my-color-themes (list 'color-theme-billw 'color-theme-jsc-dark 
                               'color-theme-sitaramv-solaris 'color-theme-resolve
                               'color-theme-classic 'color-theme-jonadabian-slate
                               'color-theme-kingsajz 'color-theme-shaman
                               'color-theme-subtle-blue 'color-theme-snowish
                               'color-theme-sitaramv-nt 'color-theme-wheat
-  			      'color-theme-adwaita 'color-theme-deeper-blue 
-  			      'color-theme-dichromacy 'color-theme-ir-black 
-  			      'color-theme-light-blue 'color-theme-manoj-dark
-  			      'color-theme-misterioso 
-  			      'color-theme-moe 'color-theme-moe-dark 'color-theme-moe-light 
-  			      'color-theme-tango 'color-theme-tango-dark
-  			      'color-theme-tsdh-dark 'color-theme-tsdh-light 
-  			      'color-theme-wheatgrass 'color-theme-whiteboard 
-  			      'color-theme-wombat 'color-theme-zenburn
-			      'color-theme-flatui-dark-theme))
-;;(load-theme 'monokai t)
+			      'color-theme-adwaita 'color-theme-deeper-blue 
+			      'color-theme-dichromacy 'color-theme-ir-black 
+			      'color-theme-light-blue 'color-theme-manoj-dark
+			      'color-theme-misterioso 
+			      'color-theme-moe 'color-theme-moe-dark 'color-theme-moe-light 
+			      'color-theme-tango 'color-theme-tango-dark
+			      'color-theme-tsdh-dark 'color-theme-tsdh-light 
+			      'color-theme-wheatgrass 'color-theme-whiteboard 
+			      'color-theme-wombat 'color-theme-zenburn))
+; Load theme
+;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+;(load-theme 'monokai t)
 ;(load-theme 'exu t)
-;; (require 'color-theme)
-;;(color-theme-initialize)
+(require 'color-theme)
+(color-theme-initialize)
 ;(color-theme-snowish)
-;;(color-theme-tty-dark)
-;;(load-theme 'flatui-dark t)
+(color-theme-tty-dark)
 
 ;; Gap
 
@@ -274,21 +306,15 @@
                                    '("\\.g$" . gap-mode)
                                    '("\\.gap$" . gap-mode)
                                    auto-mode-alist))
-;; Agda
+;; ;; Agda
 ;; (load-file (let ((coding-system-for-read 'utf-8))
 ;;                 (shell-command-to-string "agda-mode locate")))
-
-;; ;; Agda mode
-;; (load-file (let ((coding-system-for-read 'utf-8))
-;;                 (shell-command-to-string "agda-mode locate")))
-
-
 
 ;; org-mode
-(require 'org)
-(setq org-journal-dir "~/git/org/journal/")
-;(require 'org-journal)
+(require 'package)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-(setq org-log-done t)
+(require 'org-journal)
+(custom-set-variables
+ '(org-journal-dir "~/git/org/journal/"))
+(require 'ox-reveal)
