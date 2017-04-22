@@ -64,6 +64,7 @@ fi
 PATHDIRS="$HOME/bin
 $HOME/opt/scala/sbt/bin
 $HOME/opt/scala/scala-2.10.3/bin
+$HOME/opt/Spark/spark/bin
 $HOME/opt/jython/jython2.7b1/bin
 $HOME/Library/Haskell/bin
 $HOME/.cabal/bin
@@ -72,8 +73,7 @@ $HOME/.rbenv/plugins/ruby-build/bin
 /usr/bin
 /usr/local/bin
 /usr/local/sbin
-/usr/local/heroku/bin
-/usr/local/williamdemeo/opt/idea-IC-162.2032.8/bin"
+/usr/local/heroku/bin"
 
 for f in $PATHDIRS; do
     if [ -d $f ]; then
